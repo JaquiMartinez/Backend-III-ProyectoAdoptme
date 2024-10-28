@@ -1,25 +1,35 @@
 import userModel from "./models/User.js";
-
-
+import errorDictionary from "../utils/errorDictionary.js";
 export default class Users {
     
-    get = (params) =>{
+    get = (params) => {
         return userModel.find(params);
-    }
-
-    getBy = (params) =>{
+      };
+    
+      getBy = (params) => {
         return userModel.findOne(params);
-    }
-
-    save = (doc) =>{
-        return userModel.create(doc);
-    }
-
-    update = (id,doc) =>{
-        return userModel.findByIdAndUpdate(id,{$set:doc})
-    }
-
-    delete = (id) =>{
+      };
+    
+      save = async (doc) => {
+        try {
+          const existingUser = await this.getBy({ email: doc.email });
+          if (existingUser) {
+            const error = new Error(errorDictionary.USER_ALREADY_EXISTS.message);
+            error.code = errorDictionary.USER_ALREADY_EXISTS.code;
+            throw error;
+          }
+    
+          return userModel.create(doc);
+        } catch (error) {
+          throw error; // Se maneja en el middleware `errorHandler`
+        }
+      };
+    
+      update = (id, doc) => {
+        return userModel.findByIdAndUpdate(id, { $set: doc });
+      };
+    
+      delete = (id) => {
         return userModel.findByIdAndDelete(id);
+      };
     }
-}

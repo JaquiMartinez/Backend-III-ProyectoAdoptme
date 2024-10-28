@@ -1,4 +1,5 @@
 export const errorDictionary = {
+    
     USER_ALREADY_EXISTS: {
       code: 'USER_ALREADY_EXISTS',
       message: 'El usuario ya existe. Intenta con otro email.',
