@@ -1,25 +1,25 @@
-// src/dao/Pet.dao.js
 import petModel from "./models/Pet.js";
 import { CustomError } from "../utils/errorHandler.js";
 import { errorDictionary } from "../utils/errorDictionary.js";
 
-export default class Pet {
-
+export default class Pets {
+  // Obtener varias mascotas por parámetros
   async get(params) {
     try {
       return await petModel.find(params);
     } catch (error) {
-      throw new CustomError(errorDictionary.PET_FETCH_FAILED); // Si falla, lanza un error
+      throw new CustomError(errorDictionary.PET_FETCH_FAILED); // Error en la obtención
     }
   }
 
+  // Obtener una mascota específica por parámetros
   async getBy(params) {
     try {
       const pet = await petModel.findOne(params);
-      if (!pet) throw new CustomError(errorDictionary.PET_NOT_FOUND); // Error si no encuentra
+      if (!pet) throw new CustomError(errorDictionary.PET_NOT_FOUND); // No encontrada
       return pet;
     } catch (error) {
-      throw new CustomError(errorDictionary.PET_FETCH_FAILED); 
+      throw new CustomError(errorDictionary.PET_FETCH_FAILED);
     }
   }
 
@@ -28,8 +28,20 @@ export default class Pet {
     try {
       return await petModel.create(doc);
     } catch (error) {
-      if (error.code === 11000) { // Verifica si es un error de duplicado
-        throw new CustomError(errorDictionary.PET_ALREADY_EXISTS);
+      if (error.code === 11000) {
+        throw new CustomError(errorDictionary.PET_ALREADY_EXISTS); // Mascota existente
+      }
+      throw new CustomError(errorDictionary.PET_CREATION_FAILED);
+    }
+  }
+
+  // Guardar múltiples mascotas
+  async saveMany(docs) {
+    try {
+      return await petModel.insertMany(docs); // Inserta los documentos
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new CustomError(errorDictionary.PET_ALREADY_EXISTS); // Mascota existente
       }
       throw new CustomError(errorDictionary.PET_CREATION_FAILED);
     }
