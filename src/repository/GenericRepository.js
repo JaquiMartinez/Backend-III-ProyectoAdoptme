@@ -1,5 +1,5 @@
 
-export default class GenericRepository {
+/*export default class GenericRepository {
     constructor(dao) {
         this.dao = dao;
     }
@@ -23,4 +23,4 @@ export default class GenericRepository {
     delete = (id) =>{
         return this.dao.delete(id);
     }
-}
+}*/
